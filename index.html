@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List App</title>
+    <style>
+        /* For smaller screens */
+        @media (max-width: 100px) {
+            .container {
+                max-width: 100%;
+                padding: 10px;
+            }
+        }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            background-color: #fff;
+            border-radius: 10px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        select,
+        input[type="date"],
+        button {
+            font-size: 16px;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            transition: background-color 0.2s ease;
+        }
+
+        li:hover {
+            background-color: #f2f2f2;
+        }
+
+        /* Styles for completed and archived tasks */
+        .completed-task {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .archived-task {
+            color: #999;
+        }
+
+        /* Styles for task priorities */
+        .priority-high {
+            color: red;
+            font-weight: bold;
+        }
+
+        .priority-medium {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .priority-low {
+            color: green;
+            font-weight: bold;
+        }
+
+        /* Styles for dark mode */
+        body.dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        body {
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(#166ead, #9d2874);
+}
+
+/* Blue and pink color gradient */
+.container {
+    background: linear-gradient(to bottom right, #b3cde0 25%, #fce2f3 75%);
+}
+
+        .background-content {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .background-image {
+            opacity: 0.1;
+        }
+        
+    </style>
+</head>
+<body>
+    
+
+    <div class="container">
+        <h1>Todo List</h1>
+        <div>
+            <input type="text" id="taskInput" placeholder="Enter task...">
+            <select id="priorityInput">
+                <option value="none">Priority</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+            <input type="date" id="dueDateInput">
+            <input type="time" id="dueTimeInput">
+            <button onclick="addTask()">Add Task</button>
+        </div>
+        <ul id="taskList">
+            <!-- Tasks will be added here dynamically -->
+        </ul>
+    </div>
+
+    <script>
+        const taskList = document.getElementById('taskList');
+
+function addTask() {
+    /* JavaScript code remains the same as before */
+}
+
+// Dark mode toggle
+document.body.addEventListener('click', function () {
+    document.body.classList.toggle('dark-mode');
+});
+
+        function addTask() {
+            const taskInput = document.getElementById('taskInput');
+            const priorityInput = document.getElementById('priorityInput');
+            const dueDateInput = document.getElementById('dueDateInput');
+
+            const taskText = taskInput.value.trim();
+            const priority = priorityInput.value;
+            const dueDate = dueDateInput.value;
+
+            if (taskText === '') {
+                alert('Please enter a task.');
+                return;
+            }
+
+            const li = document.createElement('li');
+
+            const taskContent = document.createElement('span');
+            taskContent.innerText = taskText;
+            li.appendChild(taskContent);
+
+            if (priority !== 'none') {
+                const prioritySpan = document.createElement('span');
+                prioritySpan.className = `priority-${priority}`;
+                prioritySpan.innerText = `(${priority.charAt(0).toUpperCase()}${priority.slice(1)})`;
+                li.appendChild(prioritySpan);
+            }
+
+            if (dueDate !== '') {
+                const dueDateSpan = document.createElement('span');
+                dueDateSpan.innerText = `(Due Date: ${dueDate})`;
+                li.appendChild(dueDateSpan);
+            }
+
+            const deleteButton = document.createElement('button');
+            deleteButton.innerText = 'Delete';
+            deleteButton.onclick = function () {
+                li.remove();
+            };
+            li.appendChild(deleteButton);
+
+            const archiveButton = document.createElement('button');
+            archiveButton.innerText = 'Archive';
+            archiveButton.onclick = function () {
+                li.classList.toggle('archived-task');
+                li.querySelector('.delete-button').disabled = true;
+                li.querySelector('.archive-button').disabled = true;
+                li.querySelector('.task-checkbox').disabled = true;
+            };
+            li.appendChild(archiveButton);
+
+            const taskCheckbox = document.createElement('input');
+            taskCheckbox.type = 'checkbox';
+            taskCheckbox.className = 'task-checkbox';
+            taskCheckbox.onclick = function () {
+                if (taskCheckbox.checked) {
+                    li.classList.add('completed-task');
+                } else {
+                    li.classList.remove('completed-task');
+                }
+            };
+            li.prepend(taskCheckbox);
+
+            taskList.appendChild(li);
+
+            // Clear input fields
+            taskInput.value = '';
+            priorityInput.value = 'none';
+            dueDateInput.value = '';
+        }
+
+        // JavaScript code remains the same as before
+
+        // Load tasks from localStorage when the page loads
+        window.addEventListener('load', function () {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.forEach(task => addTaskToUI(task));
+        });
+
+        // Function to add a task to the UI
+        function addTaskToUI(task) {
+            /* Code for adding tasks to the UI remains the same */
+        }
+
+        // Function to save tasks to localStorage
+        function saveTasksToStorage(tasks) {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        // Function to toggle Dark mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        // Check and delete overdue tasks
+        function checkAndDeleteOverdueTasks() {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const currentDate = new Date();
+
+            // Filter tasks with due dates and check if they are overdue
+            const overdueTasks = tasks.filter(task => task.dueDate && new Date(task.dueDate) < currentDate);
+
+            // Delete overdue tasks from UI and localStorage
+            if (overdueTasks.length > 0) {
+                overdueTasks.forEach(overdueTask => {
+                    const index = tasks.findIndex(task => task.id === overdueTask.id);
+                    if (index !== -1) {
+                        tasks.splice(index, 1);
+                        document.getElementById(overdueTask.id).remove();
+                    }
+                });
+
+                // Save updated tasks to localStorage
+                saveTasksToStorage(tasks);
+            }
+        }
+
+        // Check and delete overdue tasks every minute (adjust the time interval as needed)
+        setInterval(checkAndDeleteOverdueTasks, 60000);
+        function addTaskToUI(task) {
+            /* Code for adding tasks to the UI remains the same */
+        }
+
+        // Function to save tasks to localStorage
+        function saveTasksToStorage(tasks) {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        // Function to toggle Dark mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        // Check and delete overdue tasks (same function as before)
+
+        // Function to handle reminder notification
+        function setReminderNotification(task) {
+            if (task.dueDate && task.dueTime) {
+                const dueDateTime = new Date(`${task.dueDate}T${task.dueTime}`);
+                const currentTime = new Date();
+
+                // Calculate the time difference in milliseconds
+                const timeDifference = dueDateTime - currentTime;
+
+                // Schedule the reminder notification using setTimeout
+                if (timeDifference > 0) {
+                    setTimeout(() => {
+                        alert(`Reminder: Task "${task.description}" is due now!`);
+                    }, timeDifference);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
